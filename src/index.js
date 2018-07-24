@@ -4,6 +4,7 @@ let CONFIG = {
   defaultCommand: 'g',
   bgColor: '#282828',
   textColor: '#ebdbb2',
+  font: 'Roboto Condensed',
   showClock: false,
   alwaysNewTab: false,
   gistID: '',
@@ -150,9 +151,16 @@ function loadConfig() {
 }
 
 function applyConfig() {
+  const [fontFamily, fontWeight, fontStyle] = CONFIG.font.match(/^(.*?)\:?(\d+)?(i)?$/).splice(1);
   // Text and background colors
   document.querySelector('body').style.backgroundColor = CONFIG.bgColor;
   document.querySelector('body').style.color = CONFIG.textColor;
+  document.querySelector('#stylesheet').href = `https://fonts.googleapis.com/css?family=${CONFIG.font.replace(' ', '+')}`;
+  document.querySelectorAll('body, input, #clock').forEach(item => {
+    item.style.fontFamily = fontFamily;
+    item.style.fontWeight = fontWeight || 'normal';
+    item.style.fontStyle = fontStyle ? 'italic' : 'inherit';
+  });
 
   // Clock
   let clock = document.querySelector('#clock');
@@ -350,6 +358,17 @@ const commands = {
         }
         break;
 
+      case 'font':
+        // Display current value if none given
+        if (args.length === 1) {
+          displayMessage(`Current Google fonts URL: ${CONFIG.font}`, 8000);
+          break;
+        }
+
+        CONFIG['font'] = args[1];
+        break;
+      
+
       // Always new tab
       case 'newtab':
       case 'alwaysNewTab':
@@ -389,6 +408,7 @@ const commands = {
           alwaysNewTab: false,
           gistID: '',
           links: [],
+          font: 'Roboto Condensed',
         }
         loadConfig();
         displayMessage('Settings reset to defaults', 5000);
