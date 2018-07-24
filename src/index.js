@@ -561,6 +561,13 @@ const commands = {
     else redirect(buildURL(url, search, args));
   },
 
+  // Can I Use
+  'caniuse': (args) => {
+    const url = 'https://caniuse.com', search = args[0].match(/\s/) ? '/#search=' : '/#feat=';
+    if (args.length == 0) redirect(url)
+    else redirect(buildURL(url, search, args));
+  },
+
   // DuckDuckGo
   'dg': (args) => {
     const url = 'https://duckduckgo.com', search = '/?q=';
